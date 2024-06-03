@@ -1,16 +1,14 @@
-const {pgPool} = require('../config/db.js');
+const { pgPool } = require("../config/db.js");
 
 const model = class Auth {
-
-   static async checkPhoneNumber(phone){
+  static async checkPhoneNumber(phone) {
     let sql = {
-     text : 'select * from public.user where phone = $1',
-     values:[phone]
-    }
+      text: "select * from public.user where contact = $1",
+      values: [phone],
+    };
 
     return pgPool.query(sql);
-   } 
-
-}
+  }
+};
 
 module.exports = model;

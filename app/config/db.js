@@ -1,4 +1,6 @@
 const { Pool } = require("pg");
+const dotenv = require("dotenv");
+dotenv.config();
 
 console.log("postgres ", process.env.DB_PASSWORD);
 
