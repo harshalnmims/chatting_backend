@@ -3,7 +3,7 @@ const auth = require('../models/auth.js')
 
 module.exports = {
   login: (req, res) => {
-    console.log("request body json", JSON.stringify(req.body));
+    console.log("request body json data", JSON.stringify(req.body));
 
     return res.status(200).json({ message: "hello world" });
   },
