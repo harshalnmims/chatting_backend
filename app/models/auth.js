@@ -24,8 +24,8 @@ const model = class Auth {
     let sql = {
       text: `SELECT *,
        CASE 
-         WHEN EXTRACT(EPOCH FROM (NOW() - otp_time)) / 60 <= 15 THEN true
-         ELSE false 
+         WHEN EXTRACT(EPOCH FROM (NOW() - otp_time)) / 60 <= 2 THEN 'Valid'
+         ELSE 'Invalid' 
        END AS otp_status 
         FROM user_login 
         WHERE user_lid=(select id from public.user where contact=$1)
@@ -33,7 +33,7 @@ const model = class Auth {
           AND DATE(created_date)=DATE(NOW()) 
         ORDER BY otp_time DESC 
         LIMIT 1 `,
-      values: [otp, username],
+      values: [username, otp],
     };
 
     return pgPool.query(sql);

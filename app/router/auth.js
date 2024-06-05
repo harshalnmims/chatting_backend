@@ -1,7 +1,7 @@
 const route = require("express").Router();
-const userCtrl = require('../controller/userCtrl.js')
+const userCtrl = require("../controller/userCtrl.js");
 
-route.post('/login', userCtrl.login);
-route.post('/validateNumber',userCtrl.validateNumber);
+route.post("/login", userCtrl.checklogin);
+route.post("/validateNumber", userCtrl.validateNumber);
 
 module.exports = route;

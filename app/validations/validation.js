@@ -8,9 +8,9 @@ module.exports = {
         zod.parse(phone);
 
         const validateLength = z
-          .string(String(phone))
+          .string()
           .refine((value) => value.length === 10);
-        validateLength.parse(phone);
+        validateLength.parse(String(phone));
 
         return true;
       } catch (error) {
@@ -26,6 +26,7 @@ module.exports = {
       try {
         const zod = z.number();
         zod.parse(num);
+        return true;
       } catch (error) {
         return false;
       }
