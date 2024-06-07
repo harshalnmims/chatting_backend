@@ -5,8 +5,9 @@ const cors = require("cors");
 
 require("dotenv").config();
 
-const { pgPool } = require("./app/config/db.js");
+const { pgPool, redisDb } = require("./app/config/db.js");
 pgPool.connect();
+redisDb.connect();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -24,7 +24,7 @@ const model = class Auth {
     let sql = {
       text: `SELECT *,
        CASE 
-         WHEN EXTRACT(EPOCH FROM (NOW() - otp_time)) / 60 <= 2 THEN 'Valid'
+         WHEN EXTRACT(EPOCH FROM (NOW() - otp_time)) / 60 <= 15 THEN 'Valid'
          ELSE 'Invalid' 
        END AS otp_status 
         FROM user_login 

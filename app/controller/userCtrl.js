@@ -3,10 +3,10 @@ const auth = require("../models/auth.js");
 const email = require("../email/email.js");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const { redisDb } = require("../config/db.js");
 dotenv.config();
 
 module.exports = {
-
   checklogin: async (req, res) => {
     let { username, otp } = req.body;
     console.log(JSON.stringify(req.body));
@@ -21,19 +21,25 @@ module.exports = {
         return res.json({ status: 400, message: "Invalid Credentials !" });
       }
 
-      let validateOtp = await auth.checkUserOtp(username,otp);
+      let validateOtp = await auth.checkUserOtp(username, otp);
 
-      if(validateOtp.rowCount == 0){
-       return res.json({status:400,message:'Invalid Otp !'});
+      if (validateOtp.rowCount == 0) {
+        return res.json({ status: 400, message: "Invalid Otp !" });
       }
 
       let checkOtpTime = await auth.checkOtpTime(username, otp);
       console.log("Otp Time ", JSON.stringify(checkOtpTime.rows[0]));
 
       if (checkOtpTime.rows[0].otp_status === "Invalid") {
-        return res.json({ status: 400, message: "otp Expired !" });
+        return res.json({ status: 400, message: "Otp Expired !" });
       }
 
+      let token = process.env.JWT_SECRET;
+      let payload = { username };
+      let jwtResponse = jwt.sign(payload, token, { expiresIn: "1 day" });
+      console.log("jwt response ", jwtResponse);
+
+      await redisDb.set(username, jwtResponse);
       return res.json({ status: 200, message: "Success" });
     } catch (error) {
       console.log(error);

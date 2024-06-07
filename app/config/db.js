@@ -1,4 +1,5 @@
 const { Pool } = require("pg");
+const { createClient } = require("redis");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -12,4 +13,10 @@ const pgPool = new Pool({
   database: process.env.DB_NAME,
 });
 
-module.exports = { pgPool };
+const redisDb = createClient({
+  host: "localhost",
+  port: 6379,
+  password: "yourpassword",
+});
+
+module.exports = { pgPool, redisDb };
