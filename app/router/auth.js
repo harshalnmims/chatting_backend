@@ -4,6 +4,6 @@ const auth = require("../middleware/request.js")
 
 route.post("/login", userCtrl.checklogin);
 route.post("/validateNumber", userCtrl.validateNumber);
-route.post("/setToken",auth.setToken);
+route.get('/verifyCookie',auth.verifyCookie);
 
 module.exports = route;
