@@ -3,7 +3,6 @@ const auth = require("../models/auth.js");
 const email = require("../email/email.js");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const { redisDb } = require("../config/db.js");
 dotenv.config();
 
 module.exports = {
@@ -39,8 +38,9 @@ module.exports = {
       let jwtResponse = jwt.sign(payload, token, { expiresIn: "1 day" });
       console.log("jwt response ", jwtResponse);
 
-      await redisDb.set(username, jwtResponse);
-      return res.json({ status: 200, message: "Success" });
+      return res.json({ status: 200, token: jwtResponse});
+
+      
     } catch (error) {
       console.log(error);
       return res.json({ status: 500, message: "Internal Server Error !" });
@@ -81,4 +81,5 @@ module.exports = {
         .json({ status: 500, message: "Internal Server Error !" });
     }
   },
+
 };
