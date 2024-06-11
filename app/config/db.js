@@ -16,7 +16,7 @@ const pgPool = new Pool({
 const redisDb = createClient({
   host: "localhost",
   port: 6379,
-  password: "yourpassword",
+  password: "",
 });
 
 module.exports = { pgPool, redisDb };
