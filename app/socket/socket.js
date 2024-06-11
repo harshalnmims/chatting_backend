@@ -30,6 +30,7 @@ const initializeSocket = async (server) => {
       let messages = chatData.rowCount > 0 ? chatData.rows : [];
 
       socket.emit("userList", { messages });
+    
     });
 
     socket.on("private message", async ({ inputMessage, contact, userId }) => {
