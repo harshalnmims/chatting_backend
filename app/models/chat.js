@@ -13,7 +13,7 @@ const chat = class Chat {
 
   static getParticularChats(userPhone, phone) {
     let sql = {
-      text: `select m.id,m.message from messages m where user_lid in (select id from public.user where contact=$1) 
+      text: `select m.id,m.message,m.created_by from messages m where user_lid in (select id from public.user where contact=$1) 
               and contact_lid =$2 or user_lid =$3
               and contact_lid in (select id from public.user where contact=$4) and m.active=true`,
       values: [userPhone, phone, phone, userPhone],
