@@ -3,10 +3,18 @@ const { pgPool } = require("../config/db.js");
 const chat = class Chat {
   static userChats(username) {
     let sql = {
-      text: `select u.id,u.firstname,u.lastname,u.contact from user_contacts uc inner join public.user u on uc.contact_lid = u.id where 
-                uc.user_lid in (select id from public.user where contact = $1) and
-                uc.active=true and u.active=true`,
-      values: [username],
+      text: `SELECT DISTINCT ON(u.id) u.id, u.firstname, u.lastname,u.contact,m.message_time
+      FROM messages m
+      INNER JOIN public.user u ON (u.id = m.contact_lid OR u.id = m.user_lid)
+      WHERE m.active = true
+        AND u.active = true
+        AND u.contact <> $1
+        AND (
+          m.contact_lid IN (SELECT id FROM public.user WHERE contact = $2 AND active = true)
+          OR m.user_lid IN (SELECT id FROM public.user WHERE contact = $3 AND active = true)
+        )
+        group by m.id,u.id, u.firstname, u.lastname,u.contact,m.message_time order by u.id,m.message_time desc `,
+            values: [username, username, username],
     };
     return pgPool.query(sql);
   }

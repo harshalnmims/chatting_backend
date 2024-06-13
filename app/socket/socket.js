@@ -16,6 +16,13 @@ const initializeSocket = async (server) => {
     // });
     // socket.emit("user-message", "Hello Harsh");
 
+    socket.on("getUserChats", async ({ username }) => {
+      let userChats = await chat.userChats(username);
+      let chatData = userChats.rowCount > 0 ? userChats.rows : [];
+      console.log("user chats ", JSON.stringify(chatData));
+      socket.emit("userChatList", { chatData });
+    });
+
     socket.on("join", ({ userId }) => {
       socket.userId = userId;
       socket.join(userId);
@@ -30,7 +37,6 @@ const initializeSocket = async (server) => {
       let messages = chatData.rowCount > 0 ? chatData.rows : [];
 
       socket.emit("userList", { messages });
-    
     });
 
     socket.on("private message", async ({ inputMessage, contact, userId }) => {
