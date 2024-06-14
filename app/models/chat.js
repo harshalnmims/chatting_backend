@@ -33,8 +33,8 @@ const chat = class Chat {
     let sql = {
       text: ` insert into messages(message,user_lid,contact_lid,created_by,modified_by,message_time)
               values($1,(select id from public.user where contact=$2),$3,$4,$5,now())
-              returning (select contact from public.user where id = $6) as contact`,
-      values: [inputMessage, userId, contact, userId, userId, contact],
+              returning id as message_id`,
+      values: [inputMessage, userId, contact, userId, userId],
     };
     return pgPool.query(sql);
   }
@@ -44,6 +44,23 @@ const chat = class Chat {
       text: `select id,module_name from modules where active=true`,
     };
     return pgPool.query(sql);
+  }
+
+  static getPhoneNumber(id){
+    let sql ={
+      text : `select contact from public.user where id = $1`,
+      values : [id]
+    }
+
+    return pgPool.query(sql);
+  }
+
+  static updateMsgStatus(messageLid,status){
+    let sql ={
+      text : `update messages set status = (select id from message_status where abbr=$1) where id =$2`,
+      values :[status,messageLid]
+    }
+    return pgPool.query(sql)
   }
 };
 
