@@ -60,8 +60,8 @@ const initializeSocket = async (server) => {
       socket.emit("updatedChats", { updateChat });
     });
 
-    // socket.on("updateMsgStatus",async ({messageLid,status}) => {
-    //  let updateStatus = await chat.updateMsgStatus(messageLid,status);
+    socket.on("updateMsgStatus",async ({messageLid,status}) => {
+     let updateStatus = await chat.updateMsgStatus(messageLid,status);
     //  socket.messageLid = messageLid;
     //  socket.join(messageLid)
     //  userStatus[messageLid] = socket.id;
@@ -71,42 +71,7 @@ const initializeSocket = async (server) => {
     //   messageLid : socket.messageLid,
     //   status : status  
     //  })
-    // })
-
-    socket.on("updateMsgStatus", async ({ messageLid, status }) => {
-      try {
-        // Update message status in the database
-        let updateStatus = await chat.updateMsgStatus(messageLid, status);
-        if (!updateStatus) {
-          console.error(`Failed to update status for messageLid: ${messageLid}`);
-          return;
-        }
-    
-        // Assign messageLid to the socket object
-        socket.messageLid = messageLid;
-        console.log('Updated messageLid:', socket.messageLid);
-    
-        // Join the socket to the room
-        socket.join(messageLid);
-        console.log(`Socket joined room: ${messageLid}`);
-    
-        // Store the user's status
-        userStatus[messageLid] = socket.id;
-        console.log(`User status updated for messageLid: ${messageLid}, socket ID: ${socket.id}`);
-    
-        // Emit updated status to the room
-        socket.to(messageLid).emit('updatedMsgStatus', {
-          messageLid: socket.messageLid,
-          status: status  
-        });
-        console.log(`Emitted updated status to room: ${messageLid}`);
-    
-      } catch (error) {
-        console.error('Error updating message status:', error);
-      }
-    });
-    
-
+    })
 
   });
 };
